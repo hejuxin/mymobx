@@ -1,5 +1,8 @@
 function deepProxy(target, handler) {
   if (typeof target !== 'object') return target;
+  for(let key in target) {
+    target[key] = deepProxy(target[key], handler)
+  }
   return new Proxy(target, handler());
 }
 
