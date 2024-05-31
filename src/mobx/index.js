@@ -1,4 +1,6 @@
-import observable from "./observable"
+import observable from "./observable";
+import autorun from "./autorun";
 export {
-  observable
+  observable,
+  autorun
 }

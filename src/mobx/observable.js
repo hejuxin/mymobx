@@ -1,3 +1,5 @@
+import Reaction from "./reaction";
+
 function deepProxy(target, handler) {
   if (typeof target !== 'object') return target;
   for(let key in target) {
@@ -8,16 +10,19 @@ function deepProxy(target, handler) {
 
 function createObservable(target) {
   let handler = () => {
+    let reaction = new Reaction();
     return {
       get(target, key) {
         // return target[key]
-
+        reaction.collect(key);
         return Reflect.get(target, key);
       },
       set(target, key, value) {
         // return target[key] = value
-
-        return Reflect.set(target, key, value);
+        const res = Reflect.set(target, key, value);
+        // 需要先设置新值，再执行监听方法
+        reaction.run(key);
+        return res;
       }
     }
   }
